@@ -1,0 +1,11 @@
+{
+  "name": “tackle-app",
+  "subdomain": “tackle-app",
+  "scripts": {
+    "start": “server.js”
+  },
+  "engines": {
+    "node": "0.10.28"
+  },
+  "version": “0.0.1”
+}
