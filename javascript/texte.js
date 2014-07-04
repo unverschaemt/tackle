@@ -1,0 +1,10 @@
+var tra = {};
+tra.setwhite = "Setze den nächsten Stein.";
+tra.setblack = "Setze den nächsten Stein.";
+tra.yourturn = "Du bist an der Reihe.";
+tra.otherturn = "Der Gegner ist dran.";
+tra.firstplayer = "Der erste Spieler ist ";
+tra.setgold = "Setze den goldenen Stein.";
+tra.youwon = "Glückwunsch! Du hast GEWONNEN!";
+tra.youlost = "Noob! Du hast VERLOREN!";
+tra.pleaseText = "Bitte gib einen Text ein."

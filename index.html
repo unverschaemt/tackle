@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Tackle</title>
+    <link href='http://fonts.googleapis.com/css?family=Megrim' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,100' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="layout/css/standard.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="layout/img/favicon.ico">
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+    <script type="text/javascript" src="javascript/tackleConnection.js"></script>
+    <script type="text/javascript" src="javascript/tackleMain.js"></script>
+    <script type="text/javascript" src="javascript/tackleGame.js"></script>
+    <script type="text/javascript" src="javascript/tackleGameKI.js"></script>
+    <script type="text/javascript" src="javascript/tackleGameKIWorker.js"></script>
+    <script type="text/javascript" src="javascript/javaJS/Move.js"></script>
+    <script type="text/javascript" src="javascript/javaJS/Opponent.js"></script>
+    <script type="text/javascript" src="javascript/javaJS/Destination.js"></script>
+    <script type="text/javascript" src="javascript/javaJS/Tackle.js"></script>
+    <script type="text/javascript" src="javascript/javaJS/Stone.js"></script>
+    <script type="text/javascript" src="javascript/figuren.js"></script>
+    <script type="text/javascript" src="javascript/texte.js"></script>
+    <script type="text/javascript" src="javascript/htmlEncode.js"></script>
+    <script type="text/javascript" src="javascript/kiTexte.js"></script>
+    <script type="text/javascript" src="layout/js/selectionHandler.js"></script>
+    <script type="text/javascript" src="layout/js/initialisieren.js"></script>
+    <script type="text/javascript" src="layout/js/GUIHandler.js"></script>
+    <script type="text/javascript" src="layout/js/animations.js"></script>
+    <script type="text/javascript" src="layout/js/coordinates.js"></script>
+    <script type="text/javascript" src="layout/js/selection.js"></script>
+    <script type="text/javascript" src="layout/js/initialStoneSet.js"></script>
+    <script type="text/javascript" src="layout/js/animations.js"></script>
+    
+    
+    <script type="text/javascript" src="javascript/socket.io.min.js"></script>
+    <script type="text/javascript" src="javascript/socketIOcontrol_L1.js"></script>
+</head>
+
+<body>
+    <div id="outwrapper">
+        <div id="wrapper">
+            <div id="popup">
+                <div id="won">
+                    <color>
+                        <h1>Glückwunsch</h1>
+                        <br>Du hast gewonnnen.
+                        <br>
+                        <p style="height: 18px"></p>
+                        <center><a class="OkButton" onclick="closePopup()">Läuft.</a>
+                        </center>
+                    </color>
+                </div>
+                <div id="fail">
+                    <color>
+                        <h1>Nooooob</h1>
+                        <br>Du hast verloren.
+                        <br>
+                        <p style="height: 18px"></p>
+                        <center><a class="OkButton" onclick="closePopup()">Läuft nicht.</a>
+                        </center>
+                    </color>
+                </div>
+            </div>
+            <div id="impre" class="page" style="height: 0%;">
+                <br>
+                <p id="header"><b>Impressum</b>
+
+                </p>
+                <br>
+                <center>
+                    <img src="layout/graphic/line.png" class="line">
+                    <br>
+                    <br>
+                    <b>#läuft GmbH</b>
+                    <br>Robin Frischmann
+                    <br>Nils Hirsekorn
+                    <br>Dustin Hoffner
+                    <br>Karlsruhe
+                    <br>Deutschland
+                    <br>
+                    <br>
+                    <img src="layout/graphic/line.png" class="line">
+                    <br>
+                    <br>E-Mail: <a style="text-decoration: none; color: #a86d05;" href="mailto:diesemailgibtsgarnicht@läuft.de?subject=Bist du tatsächlich so dumm und willst ne Mail an jemanden mit einem Umlaut im Domainnamen schicken?">tackle@läuft.de</a> 
+                    <br>
+                    <br>
+                    <img src="layout/graphic/line.png" class="line">
+                    <br>
+                    <br>Layout &amp; Design: Copyright &copy; <i> Robin Frischmann </i> 2014
+                    <br>Spiel-Logik: Copyright &copy; <i> Nils Hirsekorn </i> 2014
+                    <br>Backend / Echtzeit-Fähigkeit: Copyright &copy; <i> Dustin Hoffner </i> 2014
+                    <br>Es wurde zusätzlich die <a href="http://www.google.com/webfonts" style="text-decoration: none; color: #a86d05;">Google Web Fonts API</a> verwendet.
+                    <a class="helpButton" id="impreBack" style="bottom: 10px; right 10px; display: none" onclick="scrollPage(0)"><i class="fa fa-sort-desc"></i></a>
+
+                    <br/>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                </center>
+            </div>
+            <div id="login" class="page">
+                <br>
+                <p id="header"><b>Tackle</b>
+                </p>
+                <br>
+                <br>
+                <div id="loginBox">
+                    <form action="javascript:void(0);" onsubmit="login()">
+                        <input name="Username" id="textbox" class="textbox" type="text" required="true" placeholder="Username">
+                    </form>
+                    <a id="loginButton" onclick="login()">Login</a>
+                    <p id="loginInfo"><a onclick="scrollPage(-1)">IMPRESSUM</a>
+                        <br>Copyright &copy 2014 #läuft GmbH
+                    </p>
+                </div>
+                <a class="button" id="errorbutton" onclick="scrollPage(7)" style="position: absolute; display: none; top: 5px; right: 5px;">ERROR</a>;
+            </div>
+            <div id="dashboard" class="page">
+                <br>
+                <center>
+                    <br>
+                    <p id="welcomeUser"></p>
+                    <br>Wähle einen Spieler den du angreifen möchtest.
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <ul id="battleUserlist">
+                    </ul>
+                    <br>
+                    <br>
+                    <br>
+                    <a class="button" onclick="choosePlayer(true)">KI Game</a>
+                </center>
+            </div>
+            <div id="setform" class="page">
+                <a class="cancelButton button exitExtension" onclick="tackleMain.uiExitGame()" style="margin-right: 5px"><i class="fa fa-times"></i></a>
+                <center>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <ul id="formList">
+                        <li onclick="chooseForm(this)">
+                            <img class="figImage" src="layout/graphic/figuren/turm3.png">
+                        </li>
+                        <li onclick="chooseForm(this)">
+                            <img class="figImage" src="layout/graphic/figuren/treppe3.png">
+                        </li>
+                        <li onclick="chooseForm(this)">
+                            <img class="figImage" src="layout/graphic/figuren/turm4.png">
+                        </li>
+                        <li onclick="chooseForm(this)">
+                            <img class="figImage" src="layout/graphic/figuren/treppe4.png">
+                        </li>
+                        <li onclick="chooseForm(this)">
+                            <img class="figImage" src="layout/graphic/figuren/quadrat.png">
+                        </li>
+                        <li onclick="chooseForm(this)">
+                            <img class="figImage" src="layout/graphic/figuren/bluete.png">
+                        </li>
+                        <li onclick="chooseForm(this)">
+                            <img class="figImage" src="layout/graphic/figuren/turm5.png">
+                        </li>
+                        <li onclick="chooseForm(this)">
+                            <img class="figImage" src="layout/graphic/figuren/treppe5.png">
+                        </li>
+                        <li onclick="chooseForm(this)">
+                            <img class="figImage" src="layout/graphic/figuren/fuenf.png">
+                        </li>
+                        <li onclick="chooseForm(this)">
+                            <img class="figImage" src="layout/graphic/figuren/turm6.png">
+                        </li>
+                        <li onclick="chooseForm(this)">
+                            <img class="figImage" src="layout/graphic/figuren/block6.png">
+                        </li>
+                        <li onclick="chooseForm(this)">
+                            <img class="figImage" src="layout/graphic/figuren/vogel.png">
+                        </li>
+                        <li onclick="chooseForm(this)">
+                            <img class="figImage" src="layout/graphic/figuren/block8.png">
+                        </li>
+                        <li onclick="chooseForm(this)">
+                            <img class="figImage" src="layout/graphic/figuren/brunnen.png">
+                        </li>
+                        <li onclick="chooseForm(this)">
+                            <img class="figImage" src="layout/graphic/figuren/block9.png">
+                        </li>
+                    </ul>
+                </center>
+            </div>
+            <div id="pleasewait" class="page">
+                <a class="button exitExtension cancelButton" onclick="tackleMain.uiExitGame()" style="margin-right: 5px"><i class="fa fa-times"></i></a>
+                <center>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <p style="font-size: 30pt">Bitte warten...</p>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <img src="layout/graphic/loading.gif" height="200" width="200">
+                </center>
+            </div>
+            <div id="attacked" class="page">
+                <center style="margin-top: 100px; font-size: 20pt">
+                    Du wurdest von
+                    <br>
+                    <p id="attackByUser"></p>
+                    angegriffen!
+                    <br>
+                    <br>
+                    <br>
+                    <a onclick="acceptGame()" class="button acceptButton" style="margin-right: 5px"><i class="fa fa-check"></i></a>
+                    <a onclick="cancelGame()" class="button cancelButton" style="margin-right: 5px"><i class="fa fa-times"></i></a>
+                </center>
+            </div>
+            <div id="game" class="page">
+                <audio id="getlucky" style="display: none" controls loop>
+                    <source src="layout/audio/getlucky.mp3" type="audio/mp3">
+                </audio>
+                <a class="exitButton cancelButton" onclick="tackleMain.uiExitGame()" style="margin-right: 5px"><i class="fa fa-times"></i></a>
+                <a class="helpButton" onclick="scrollPage(6)"><i class="fa fa-question"></i></a>
+                <a class="soundButton" onclick="toggleSound();" id="soundshow"><i class="fa fa-volume-up"></i></a>
+                <p id="playerTurn">du bist dran!</p>
+                <div id="gamePanel">
+                    <p id="info">
+                        Du bist <span id="playerInGame" class="player1"></span>
+                        <br>
+                        <br>
+                        <br>
+                        <img id="gameMode" width="100" height="100" src="layout/graphic/figuren/turm3.png">
+                        <!--<span id="player1"></span>
+                        <br>
+                        <span id="player2"></span>-->
+                        <span id="coordinates">
+                    X | Y
+                    </span>
+                    </p>
+                    <table id="table" onmouseover="showCoordinateLabel()" onmouseout="hideCoordinateLabel()">
+                        <tr>
+                            <td class="edge" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="edge" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                        </tr>
+                        <tr>
+                            <td class="colFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowLast colLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowLast colFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="colLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                        </tr>
+                        <tr>
+                            <td class="colFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="colLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="colFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="colLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                        </tr>
+                        <tr>
+                            <td class="colFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="colLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="colFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="colLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                        </tr>
+                        <tr>
+                            <td class="colFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="colLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="colFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="colLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                        </tr>
+                        <tr>
+                            <td class="colFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="colLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="colFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="colLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                        </tr>
+                        <tr>
+                            <td class="colFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="colLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="colFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="colLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                        </tr>
+                        <tr>
+                            <td class="colFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="colLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="colFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="colLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                        </tr>
+                        <tr>
+                            <td class="colFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowFirst colLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowFirst colFirst" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="colLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                        </tr>
+                        <tr>
+                            <td class="edge" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="rowLast" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                            <td class="edge" onmouseover="showCoordinate(this)" onmousedown="select(event, this)"></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="toolbar"><i class="toolboxButton firstToolbox fa fa-bold"></i><i class="toolboxButton fa fa-italic"></i><i class="fa fa-underline toolboxButton"></i><i class="fontsmall fa fa-font"></i><i class="toolboxButton leftLeft fa fa-font"></i><i class="toolboxButton fa fa-subscript"></i><i class="toolboxButton fa fa-superscript"></i><i class="toolboxButton fa fa-smile-o"></i><i class="toolboxButton fa fa-link"></i><i class="toolboxButton fa fa-image"></i><i class="toolboxButton fa fa-camera"></i><i class="toolboxButton fa fa-video-camera"></i><i class="toolboxButton fa fa-cloud-upload"></i><i class="toolboxButton fa fa-bar-chart-o"></i><i style="float: right; border-left: 1px solid darkgray !important; border-right: 0px !important; border-radius: 0px 20px 0px 0px;" class="toolboxButton fa fa-trash-o"></i>
+                </div>
+                <p id="log">
+                    >> Das Spiel beginnt.
+                    <br>
+                    <br>
+                </p>
+                <form action="javascript:void(0);" onsubmit="sendChat()">
+                    <input name="chat" id="chat" class="textbox" type="text" required="true" placeholder="Nachricht eingeben...">
+                </form>
+            </div>
+            <div id="anleitung" class="page">
+                <a class="helpButton" onclick="scrollPage(5)"><i class="fa fa-sort-asc"></i></a>
+                <div id="anleitungin">
+                    <H1 CLASS="western megrim">Tackle</H1>
+                    <H2 CLASS="western">Spielanleitung</H2>
+                    <P style="color: #8b8b8b"><i>Ein Spiel von Thomas Sing und Ralf-Peter Gebhardt</i>
+                    </P>
+                    <br>
+                    <P><b>Spieleranzahl</b>: 2
+                        <BR><b>Alter</b>: ab 8 Jahren
+                        <BR><b>Spieldauer</b>: ab 10 Minuten je nach Figur</P>
+                    <br>
+                    <P>Bei diesem Duell des Geistes sind strategisches Geschick und r&auml;umliches Denken gefragt. Wer klug zieht und zuerst die Zielfigur auf dem Spielbrett abbildet, gewinnt. Abwechselnd verschieben die beiden Spieler dazu ihre Steine, bilden Bl&ouml;cke und dr&auml;ngen sich gegenseitig aus der Gefahrenzone. Immer den Gegner im Blick und das Ziel vor Augen.</P>
+                    <P>Tackle ist ein Tempospiel. Die Regeln sind einfach, die strategischen M&ouml;glichkeiten unbegrenzt. Von einfachen Figuren wie dem Turm bis zum anspruchsvollen Brunnen bestimmen sie selbst den Schwierigkeitsgrad jeder Partie. Und so ist Tackle ein Spiel f&uuml;r kleine wie gro&szlig;e Strategen.</P>
+                    <br>
+                    <br>
+                    <H3 CLASS="western" STYLE="font-weight: normal"><b>Auf einen Blick</b></H2>
+                    <P>
+                        <IMG SRC="layout/graphic/anleitung/01.png" class="guideImage"  style="margin-right: 15px;" NAME="Grafik1" ALIGN=LEFT WIDTH=203 HEIGHT=200 BORDER=0><br>Bei Tackle gewinnt, wer mit seinen Steinen zuerst eine vorgegebene Figur (den sogenannten
+                        <B>job</B>
+                        <SPAN STYLE="font-weight: normal">) auf
+dem inneren Bereich des Spielbretts (</SPAN>
+                        <B>court</B>
+                        <SPAN STYLE="font-weight: normal">)
+abbildet.</SPAN>
+                    </P> 
+                    <P>
+                        <SPAN STYLE="font-weight: normal">Suchen Sie sich zu Beginn einen
+Job aus. Der einfachste job mit nur 3 Steinen ist der Turm3, der
+schwierigste mit 9 Steinen der Block9. Ein Spieler erh&auml;lt die
+lila farbigen Steine, der andere die gr&uuml;nen. Jeder Spieler
+spielt immer </SPAN>
+                        <B>mit 2 Steinen mehr,</B>
+                        <SPAN STYLE="font-weight: normal">
+als der job Steine ben&ouml;tigt.</SPAN>
+                    </P>
+                     <br><br><br><br><br><br>
+                    <H3 CLASS="western" STYLE="font-weight: normal"><b>Er&ouml;ffnung</b></H3>
+                    <P>
+                        <IMG SRC="layout/graphic/anleitung/02.png" class="guideImage" style="margin-right: 15px;" NAME="Grafik2" ALIGN=LEFT WIDTH=203 HEIGHT=200 BORDER=0>
+                        <br>
+                        <SPAN STYLE="font-weight: normal">Lila
+beginnt immer das Spiel. In der Er&ouml;ffnung legen die Spieler
+abwechselnd ihre Steine auf beliebige Positionen der &auml;u&szlig;eren
+Brettreihe (</SPAN>
+                        <B>border</B>
+                        <SPAN STYLE="font-weight: normal">).<BR></SPAN>
+                        <B>Einzige
+Einschr&auml;nkung</B>
+                        <SPAN STYLE="font-weight: normal">: In der
+Er&ouml;ffnung d&uuml;rfen eigene Steine nicht direkt nebeneinander
+gelegt werden. Der gr&uuml;ne Spieler darf zum Abschluss der
+Er&ouml;ffnung in den mittleren 16 Feldern des Brettes (</SPAN>
+                        <B>core</B>
+                        <SPAN STYLE="font-weight: normal">)
+setzen. Der Goldstein sollte so gesetzt werden, dass lila farbige
+Steine in ihrer Bewegungsfreiheit eingeschr&auml;nkt sind.</SPAN>
+                    </P>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <H3 CLASS="western" STYLE="font-weight: normal"><b>Hauptspiel</b></H3>
+                    <P>
+                        <IMG SRC="layout/graphic/anleitung/03.png" class="guideImage" style="margin-right: 15px;" NAME="Grafik3" ALIGN=LEFT WIDTH=199 HEIGHT=199 BORDER=0>
+                        <br>
+                        <SPAN STYLE="font-weight: normal">Nun
+ziehen die Spieler immer abwechselnd mit einem beliebigen Stein ihrer
+Farbe. Die Zugrichtung ist </SPAN>
+                        <B>senkrecht oder waagerecht</B>
+                        <SPAN STYLE="font-weight: normal">.
+Ein Stein kann beliebig weit gezogen werden, solange kein anderer
+Stein im Weg steht. Nat&uuml;rlich kann ein bereits gezogener Stein
+erneut gezogen werden.<BR></SPAN>
+                        <B>Einzige Ausnahme</B>
+                        <SPAN STYLE="font-weight: normal">:
+Von den 4 Eckfeldern des Spielbretts kann ein Stein auch </SPAN>
+                        <B>diagonal</B>
+                        <SPAN STYLE="font-weight: normal">gezogen werden.</SPAN>
+                    </P>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <H3 CLASS="western" STYLE="font-weight: normal"><b>Blockbildung</b></H3>
+                    <P STYLE="font-weight: normal">
+                        <IMG SRC="layout/graphic/anleitung/04.png" class="guideImage" style="margin-right: 15px;" NAME="Grafik4" ALIGN=LEFT WIDTH=199 HEIGHT=199 BORDER=0>
+                        <br>Oft ist es angebracht, mit den eigenen Steinen einen Block zu bilden. Die Blockbildung hat zewi taktische Vorteile:</P>
+                    <UL>
+                        <LI style="list-style-type: none;text-decoration: none;">
+                            <P>
+                                <SPAN STYLE="font-weight: normal">Verbundene Steine (Bl&ouml;cke)
+	k&ouml;nnen in ihrer </SPAN>
+                                <B>L&auml;ngsrichtung </B>
+                                <SPAN STYLE="font-weight: normal">gemeinsam
+	beliebig weit gezogen werden, solange ihnen kein anderer Stein im
+	Weg steht. Verbundene Quadrate k&ouml;nnen sogar senkrecht oder
+	waagerecht gezogen werden.</SPAN>
+                            </P>
+                    </UL>
+                    <P>
+                        <BR>
+                        <BR>
+                        <br>
+                        <br>
+                    </P>
+                    <P>
+                        <IMG SRC="layout/graphic/anleitung/05.png" class="guideImage" style="margin-right: 15px;" NAME="Grafik5" ALIGN=LEFT WIDTH=195 HEIGHT=197 BORDER=0>
+                        <BR>
+                        <BR>
+                    </P>
+                    <UL>
+                        <P></P>
+                        <LI style="list-style-type: none;text-decoration: none;">
+                            <P>
+                                <SPAN STYLE="font-weight: normal">Verbundene Steine werden
+	&bdquo;m&auml;chtiger&ldquo; und k&ouml;nnen </SPAN>
+                                <B>direkt</B>
+                                <SPAN STYLE="font-weight: normal">vor ihnen liegende gegnerische
+	Steine von geringerer M&auml;chtigkeit verschieben. Die M&auml;chtigkeit
+	bestimmt sich aus der Anzahl der Steine in Ziehrichtung. So k&ouml;nnen
+	Sie also zum Beispiel mit einem 3er-Block einen einzelnen Stein oder
+	einen gegnerischen 2er-Block verschieben.</SPAN>
+                            </P>
+                    </UL>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <H3 CLASS="western" STYLE="font-weight: normal"><b>Gewinner</b></H3>
+                    <P STYLE="font-weight: normal">
+                        <IMG SRC="layout/graphic/anleitung/06.png" class="guideImage" style="margin-right: 15px;" NAME="Grafik6" ALIGN=LEFT WIDTH=197 HEIGHT=197 BORDER=0>
+                        <br>Lila gewinnt die Partie. Er schiebt seinen Stein beim n&auml;chsten Zug 4 Felder nach oben und erf&uuml;llt so den job Turm3 als Erster. Das kann gr&uuml;n nicht verhindern. Ein job ist nur dann erf&uuml;llt, wenn kein Stein des jobs auf einem Randfeld (border) liegt.
+                        <BR>Es spielt keine Rolle, ob die Steine waagerecht oder senkrecht nebeneinander liegen. Nur die Form ist entscheidend.</P>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <H2 CLASS="western" STYLE="font-weight: normal"><b>Der Job</b></H2>
+                    <P STYLE="font-weight: normal">Ein job ist eine Aneinanderreihung von Spielsteinen. Je mehr Steine der job ben&ouml;tigt, desto komplexer ist die Aufgabe. Jeder Spieler spielt immer mit 2 Steinen mehr, als der job es erfordert (3-Feld-jobs spielen Sie also jeweils mit 5, 4-Feld-jobs mit 6 Steinen).</P>
+                    <P>
+                        <br>
+                        <B>Wichtig: </B>
+                        <SPAN STYLE="font-weight: normal">Ein job ist bei
+seiner Richtungsgebung flexibel zu betrachten. Sie k&ouml;nnen die
+Figur sowohl um 90, 180, als auch um 270 Grad drehen.</SPAN>
+                    </P>
+                    <P STYLE="font-weight: normal">Bei manchen jobs sind Felder mit einem x gekennzeichnet. Das bedeutet, dass dieser job erst dann erf&uuml;llt ist, wenn die mit x gekennzeichneten Felder nicht von einem eigenen Stein besetzt sind. Die Felder k&ouml;nnen frei, von einem gegnerischen Stein oder vom Goldstein belegt sein.</P>
+                </div>
+            </div>
+            <div id="error" class="page">
+                <center>
+                    <audio controls autoplay>
+                        <audio src="layout/audio/error.mp3" id="mp3" preload="auto"></audio>
+                    </audio>
+                </center>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+

@@ -1,0 +1,785 @@
+/* FELDSIZE = 600px */
+
+* {
+    margin: 0;
+    padding: 0
+}
+html,
+body {
+    height: 100%;
+    width: 100%;
+}
+#wrapper {
+    background-color: white;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    color: grey;
+    -webkit-transition: ease-in-out 1.0s;
+    -moz-transition: ease-in-out 1.0s;
+    transition: ease-in-out 1.0s;
+    /*overflow: hidden;*/
+}
+#header {
+    color: #414141;
+    font-family: Megrim, serif;
+    font-size: 110pt;
+    font-weight: 900;
+    text-align: center;
+}
+.megrim {
+    font-family: Megrim, serif;
+    font-size: 80pt;
+    margin-bottom: 8px;
+}
+#gamePanel {
+    width: 724px;
+    height: 604px;
+    position: relative;
+    border: 1px solid #9d9d9d;
+    padding: 10px;
+    margin-top: 5px;
+    margin-left: calc(50% - (744px/2));
+}
+.enemyTurn {
+    filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale");
+    filter: gray;
+    /* IE6-9 */
+    -webkit-filter: grayscale(70%);
+    -moz-filter: grayscale(70%);
+    -o-filter: grayscale(70%);
+    -ms-filter: grayscale(70%);
+    filter: grayscale(70%);
+    z-index: -1;
+}
+#info {
+    display: inline-block;
+    position: relative;
+    float: left;
+    width: 100px;
+    max-width: 100px;
+    padding: 10px 10px 10px 10px;
+}
+#player1,
+#player2 {
+    width: 25px;
+    height: 25px;
+    margin: 10px 5px -6px 0px;
+    display: inline-block;
+}
+#player1 {
+    background-color: #a66bbc;
+    border: 1px solid #7b3b91;
+}
+#player2 {
+    background-color: #3e988b;
+    border: 1px solid #196a5e;
+}
+#coordinates {
+    display: inline-block;
+    border: 1px solid grey;
+    padding: 5px;
+    margin-top: 20px;
+    text-align: center;
+    width: 50px;
+    display: none;
+}
+table,
+tr,
+td {
+    padding: 0;
+    margin: 0 border-collapse: collapse;
+    border-spacing: 0;
+}
+table {
+    background: rgb(255, 254, 247) url('../graphic/bg.png');
+    background-size: 100% 100%;
+    display: inline-block;
+    position: relative;
+    float: left;
+}
+td {
+    height: 58px;
+    width: 58px;
+    border: 1px solid #9d9d9d;
+}
+td:hover {
+    background-color: rgba(111, 111, 209, 0.34);
+    border: 1px solid #2f508e;
+}
+.rowFirst {
+    border-bottom: 2px solid #5c5c5c;
+}
+.colFirst {
+    border-right: 2px solid #5c5c5c;
+}
+.rowLast {
+    border-top: 2px solid #5c5c5c;
+}
+.colLast {
+    border-left: 2px solid #5c5c5c;
+}
+.edge {
+    background-color: #454545;
+    border: 1px solid #454545;
+}
+.possibleTurns {
+    background-image: url(../graphic/possibleTurns.png);
+    border: 1px solid #454545;
+}
+.player1 {
+    background-color: #a66bbc;
+    border: 1px solid #7b3b91;
+}
+.player2 {
+    background-color: #3e988b;
+    border: 1px solid #196a5e;
+}
+.player1:hover {
+    background-color: #d5b7e0;
+}
+.player2:hover {
+    background-color: #8fd6cc;
+}
+.gold {
+    background-color: #d4c021;
+    border: 1px solid #9b8c15;
+}
+.gold:hover {
+    background-color: #f8e351!important;
+    border: 1px solid #2f508e!important;
+}
+.button {
+    border: 1px solid #f8f8f8;
+    font-size: 30px;
+    font-family: Lato, sans-serif;
+    font-weight: 300;
+    border-radius: 15px;
+    color: #f8f8f8;
+    text-decoration: none;
+    -webkit-transition: all 400ms ease-in-out;
+    -moz-transition: all 400ms ease-in-out;
+    transition: all 400ms ease-in-out;
+    padding: 5px 14px 8px 14px;
+}
+.button:hover {
+    background-color: #f8f8f8;
+    color: #4c6d6d!important;
+}
+.exitButton {
+    border: 1px solid #434343;
+    font-size: 30px;
+    font-family: Lato, sans-serif;
+    font-weight: 300;
+    border-radius: 15px;
+    color: #434343;
+    text-decoration: none;
+    -webkit-transition: all 400ms ease-in-out;
+    -moz-transition: all 400ms ease-in-out;
+    transition: all 400ms ease-in-out;
+    padding: 5px 14px 8px 14px;
+    margin: 10px 0px 0px 10px;
+    position: absolute;
+}
+.exitButton:hover {
+    background-color: #434343;
+    color: #f5f5f5!important;
+}
+.exitExtension {
+    padding: 5px 14px 8px 14px;
+    margin: 10px 0px 0px 10px;
+    position: absolute;
+}
+.page {
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+#element::-webkit-scrollbar {
+    display: none;
+}
+#login {
+    background-color: #5aa28b;
+    margin: 0px auto;
+    <!--background: url(../graphic/background.JPG) no-repeat;
+    background-size: 100% 100%;
+    -->
+}
+#dashboard {
+    background-color: #4c6d6d;
+    color: #ededed;
+    font-size: 15pt;
+    margin: 0px auto;
+}
+#pleasewait {
+    background-color: #78a8be;
+    color: #ededed;
+    font-size: 15pt;
+    margin: 0px auto;
+}
+#setform {
+    background-color: #4c6d6d;
+    color: #ededed;
+    font-size: 15pt;
+    margin: 0px auto;
+}
+#attacked {
+    background-color: #4c6d6d;
+    color: #ededed;
+    font-sizxe: 15pt;
+    margin: 0px auto;
+}
+#error {
+    background-color: #af4930;
+    color: #ededed;
+    font-size: 15pt;
+    margin: 0px auto;
+    background: url(../graphic/error404.jpg);
+    background-size: 100% 100%;
+}
+#log {
+    height: 90px;
+    overflow-y: scroll;
+    background-color: #e8e7e7;
+    width: 464px;
+    border: 1px solid #ddd;
+    position: relative;
+    padding: 20px;
+    margin-left: calc(50% - (504px/2));
+    -webkit-transition: all 400ms ease-in-out;
+    -moz-transition: all 400ms ease-in-out;
+    transition: all 400ms ease-in-out;
+    opacity: 0.9;
+}
+#log:hover {
+    opacity: 1;
+}
+.animationStone {
+    height: 58px;
+    width: 58px;
+    position: fixed;
+    display: block;
+    z-index: 200;
+    top: 30px;
+    left: 40px;
+}
+#loginBox {
+    height: 150px;
+    background-color: #e8e7e7;
+    border-radius: 20px;
+    margin-top: 20px;
+    width: 260px;
+    border: 1px solid #ddd;
+    position: relative;
+    padding: 20px;
+    margin-left: calc(50% - (300px/2));
+    box-shadow: 0px 0px 5px grey;
+}
+.textbox {
+    width: calc(100% - 22px);
+    height: 20px;
+    padding: 5px 10px 5px 10px;
+    font-size: 18px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    -ms-border-radius: 20px;
+    -o-border-radius: 20px;
+    border-radius: 20px;
+    border-style: solid;
+    border-color: lightgray;
+    border-width: 1px;
+}
+.textbox:focus {
+    border-color: grey;
+    background-color: rgba(209, 232, 232, 0.2);
+    box-shadow: 0px 0px 2px rgba(114, 106, 106, 0.3);
+    outline-width: 0;
+}
+#chat {
+    width: 486px;
+    margin-left: calc(50% - (504px/2));
+    position: relative;
+    padding: 5px 9px 5px 9px;
+    border-radius: 0px 0px 20px 20px;
+}
+#loginButton {
+    font-family: Megrim, serif;
+    text-decoration: none;
+    padding: 10px 13px 10px 13px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    -ms-border-radius: 20px;
+    -o-border-radius: 20px;
+    border-radius: 20px;
+    border-color: rgb(19, 119, 124);
+    border-style: solid;
+    border-width: 1px;
+    font-size: 30px;
+    text-align: center;
+    width: calc(100% - 26px);
+    display: inline-block;
+    color: white;
+    font-weight: 400;
+    vertical-align: top;
+    background: -moz-linear-gradient(top, rgba(31, 158, 141, 1) 0%, rgba(28, 130, 118, 1) 76%, rgba(23, 109, 100, 1) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(31, 158, 141, 1)), color-stop(76%, rgba(28, 130, 118, 1)), color-stop(100%, rgba(23, 109, 100, 1)));
+    background: -webkit-linear-gradient(top, rgba(31, 158, 141, 1) 0%, rgba(28, 130, 118, 1) 76%, rgba(23, 109, 100, 1) 100%);
+    background: -o-linear-gradient(top, rgba(31, 158, 141, 1) 0%, rgba(28, 130, 118, 1) 76%, rgba(23, 109, 100, 1) 100%);
+    background: -ms-linear-gradient(top, rgba(31, 158, 141, 1) 0%, rgba(28, 130, 118, 1) 76%, rgba(23, 109, 100, 1) 100%);
+    background: linear-gradient(to bottom, rgba(31, 158, 141, 1) 0%, rgba(28, 130, 118, 1) 76%, rgba(23, 109, 100, 1) 100%);
+    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#1f9e8d', endColorstr='#176d64', GradientType=0);
+    background-color: rgba(48, 186, 171, 1);
+    cursor: pointer;
+    margin-top: 8px;
+}
+#loginButton:hover {
+    background: -moz-linear-gradient(top, rgba(37, 186, 161, 1) 0%, rgba(33, 153, 135, 1) 76%, rgba(28, 130, 116, 1) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(37, 186, 161, 1)), color-stop(76%, rgba(33, 153, 135, 1)), color-stop(100%, rgba(28, 130, 116, 1)));
+    background: -webkit-linear-gradient(top, rgba(37, 186, 161, 1) 0%, rgba(33, 153, 135, 1) 76%, rgba(28, 130, 116, 1) 100%);
+    background: -o-linear-gradient(top, rgba(37, 186, 161, 1) 0%, rgba(33, 153, 135, 1) 76%, rgba(28, 130, 116, 1) 100%);
+    background: -ms-linear-gradient(top, rgba(37, 186, 161, 1) 0%, rgba(33, 153, 135, 1) 76%, rgba(28, 130, 116, 1) 100%);
+    background: linear-gradient(to bottom, rgba(37, 186, 161, 1) 0%, rgba(33, 153, 135, 1) 76%, rgba(28, 130, 116, 1) 100%);
+    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#25baa1', endColorstr='#1c8274', GradientType=0);
+    background-color: rgb(34, 173, 152);
+}
+#loginButton:active {
+    background: rgb(22, 112, 97);
+    background: -moz-linear-gradient(top, rgba(22, 112, 97, 1) 0%, rgba(20, 91, 81, 1) 76%, rgba(14, 66, 59, 1) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(22, 112, 97, 1)), color-stop(76%, rgba(20, 91, 81, 1)), color-stop(100%, rgba(14, 66, 59, 1)));
+    background: -webkit-linear-gradient(top, rgba(22, 112, 97, 1) 0%, rgba(20, 91, 81, 1) 76%, rgba(14, 66, 59, 1) 100%);
+    background: -o-linear-gradient(top, rgba(22, 112, 97, 1) 0%, rgba(20, 91, 81, 1) 76%, rgba(14, 66, 59, 1) 100%);
+    background: -ms-linear-gradient(top, rgba(22, 112, 97, 1) 0%, rgba(20, 91, 81, 1) 76%, rgba(14, 66, 59, 1) 100%);
+    background: linear-gradient(to bottom, rgba(22, 112, 97, 1) 0%, rgba(20, 91, 81, 1) 76%, rgba(14, 66, 59, 1) 100%);
+    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#167061', endColorstr='#0e423b', GradientType=0);
+    background-color: rgba(23, 110, 100, 1);
+    box-shadow: none;
+}
+#loginInfo {
+    color: #a0a0a0;
+    padding: 5px;
+    padding-top: 20px;
+    font-size: 11pt;
+    text-align: center;
+}
+#loginInfo a {
+    text-decoration: none;
+    color: #5f5f5f;
+}
+ul#battleUserlist {
+    cursor: pointer;
+    list-style-type: none;
+    text-decoration: none;
+}
+ul#battleUserlist li {
+    padding: 15px 0px 15px 0px;
+    text-decoration: none;
+    cursor: pointer;
+}
+ul#battleUserlist li:nth-child(odd) {
+    background-color: rgba(54, 80, 80, 0.29);
+}
+ul#battleUserlist li:nth-child(even) {
+    background-color: rgba(94, 126, 126, 0.28);
+}
+ul#battleUserlist li:hover {
+    background-color: rgba(36, 67, 67, 0.5);
+}
+#welcomeUser {
+    font-size: 24pt;
+}
+#formList {
+    margin: 0;
+    padding: 0px;
+}
+#formList li {
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    list-style-type: none;
+    text-decoration: none;
+    background-color: white;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+    border-radius: 10px;
+    padding: 20px;
+    opacity: 0.6;
+    margin-top: 30px;
+}
+.figImage {
+    height: 100px;
+    width: 100px;
+}
+#formList li:hover {
+    box-shadow: 0px 0px 7px rgba(40, 40, 40, 0.7);
+    opacity: 1;
+}
+@media (max-width: 600px),
+(max-height: 800px) {
+    #gamePanel {
+        width: 524px;
+        height: 404px;
+        margin-left: calc(50% - (544px/2));
+    }
+        #log {
+        height: 80px;
+    }
+    td {
+        height: 38px;
+        width: 38px;
+    }
+    .animationStone {
+        height: 38px;
+        width: 38px;
+    }
+    #header {
+        font-size: 100pt;
+    }
+}
+@media (max-width: 500px),
+(max-height: 700px) {
+    #gamePanel {
+        width: 424px;
+        height: 304px;
+        margin-left: calc(50% - (444px/2));
+    }
+    td {
+        height: 28px;
+        width: 28px;
+    }
+    .animationStone {
+        height: 28px;
+        width: 28px;
+    }
+    #log {
+        height: 70px;
+    }
+    #formList li,
+    .figImage {
+        height: 50px;
+        width: 50px;
+    }
+    #header {
+        font-size: 80pt;
+    }
+}
+#outwrapper {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+#playerInGame {
+    width: 25px;
+    height: 25px;
+    margin: 10px 5px -8px 0px;
+    display: inline-block;
+}
+.setGoldenStone {
+    background-color: rgba(242, 242, 184, 0.8);
+}
+#popup {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+    z-index: 120;
+    background-color: rgba(40, 40, 40, 0.8);
+    display: none;
+}
+#won {
+    display: none;
+    left: calc(50% - 150px);
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+    border-radius: 10px;
+    z-index: 1300;
+    top: calc(50% - 150px);
+    height: 200px;
+    width: 300px;
+    text-align: center;
+    background-color: white;
+    box-shadow: 0px 0px 3px rgba(60, 60, 60, 0.8);
+    position: fixed;
+    font-size: 20pt;
+}
+#won h1 {
+    top: 0px;
+    border-radius: 10px 10px 0px 0px;
+    font-size: 30pt;
+    color: #2f5d2f;
+    width: 100%;
+    padding: 5px 0px 5px 0px;
+    text-align: center;
+    background-color: #b1d0b1;
+}
+.OkButton {
+    border: 1px solid #434343;
+    font-size: 30px;
+    font-family: Lato, sans-serif;
+    font-weight: 300;
+    border-radius: 15px;
+    color: #434343;
+    text-decoration: none;
+    -webkit-transition: all 400ms ease-in-out;
+    -moz-transition: all 400ms ease-in-out;
+    transition: all 400ms ease-in-out;
+    padding: 5px 14px 8px 14px;
+    text-align: center;
+}
+.OkButton:hover {
+    background-color: #434343;
+    color: #f5f5f5!important;
+}
+#fail {
+    display: none;
+    left: calc(50% - 150px);
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+    border-radius: 10px;
+    z-index: 1300;
+    top: calc(50% - 150px);
+    height: 200px;
+    width: 300px;
+    text-align: center;
+    background-color: white;
+    box-shadow: 0px 0px 3px rgba(60, 60, 60, 0.8);
+    position: fixed;
+    font-size: 20pt;
+}
+#fail h1 {
+    top: 0px;
+    border-radius: 10px 10px 0px 0px;
+    font-size: 30pt;
+    color: #6f2a2a;
+    width: 100%;
+    padding: 5px 0px 5px 0px;
+    text-align: center;
+    background-color: #d0b1b1;
+}
+#impre {
+    background-color: #ffbd00;
+    margin: 0px auto;
+    color: #5f5f5f;
+    font-size: 15pt;
+    font-family: Lato, sans-serif;
+    -webkit-transition: ease-in-out 1.0s;
+    -moz-transition: ease-in-out 1.0s;
+    transition: ease-in-out 1.0s;
+}
+#loginInfo a {
+    cursor: pointer;
+}
+.line {
+    width: 60%;
+    height: 1px;
+}
+#anleitung {
+    background-color: rgb(240, 240, 240);
+    color: #808080;
+    font-size: 15pt;
+    margin: 0px auto;
+}
+#anleitungin {
+    margin: 4% 10% 4% 6%;
+}
+.helpButton {
+    border: 1px solid #434343;
+    font-size: 30px;
+    font-family: Lato, sans-serif;
+    font-weight: 300;
+    border-radius: 50%;
+    color: #434343;
+    text-decoration: none;
+    -webkit-transition: all 400ms ease-in-out;
+    -moz-transition: all 400ms ease-in-out;
+    transition: all 400ms ease-in-out;
+    padding: 10px 20px 11px 20px;
+    margin: 10px 0px 0px 10px;
+    position: absolute;
+    right: 10px;
+}
+.helpButton:hover {
+    background-color: #434343;
+    color: #f5f5f5!important;
+}
+#impreBack:hover {
+    color: #ffbd00 !important;
+}
+.acceptButton {
+    border-radius: 50% !important;
+    padding-top: 11px;
+    padding-bottom: 11px;
+}
+.cancelButton {
+    border-radius: 50% !important;
+    padding: 10px 17px 12px 17px;
+}
+.guideImage {
+    border-radius: 5px;
+    box-shadow: 0px 0px 2px grey;
+    margin-top: 10px;
+}
+.impressumBack {
+    bottom: 10px !important;
+}
+@-moz-keyframes blinker {
+    0% {
+        opacity: 1.0;
+    }
+    50% {
+        opacity: 0.0;
+    }
+    100% {
+        opacity: 1.0;
+    }
+}
+@-webkit-keyframes blinker {
+    0% {
+        opacity: 1.0;
+    }
+    50% {
+        opacity: 0.0;
+    }
+    100% {
+        opacity: 1.0;
+    }
+}
+@keyframes blinker {
+    0% {
+        opacity: 1.0;
+    }
+    50% {
+        opacity: 0.0;
+    }
+    100% {
+        opacity: 1.0;
+    }
+}
+#playerTurn {
+    position: relative;
+    top: 4px;
+    z-index: -1;
+    width: 100%;
+    height: 46px;
+    font-size: 30pt;
+    text-align: center;
+    color: #ac1b40;
+    font-family: Megrim, serif;
+    -webkit-animation-name: blinker;
+    -webkit-animation-duration: 1s;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+    -moz-animation-name: blinker;
+    -moz-animation-duration: 1s;
+    -moz-animation-timing-function: linear;
+    -moz-animation-iteration-count: infinite;
+    animation-name: blinker;
+    animation-duration: 1s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    opacity: 0;
+    padding: 1px 0px;
+    padding-top: 2px;
+}
+.animationTran {
+    -webkit-transition: all 600ms ease-in-out;
+    -moz-transition: all 600ms ease-in-out;
+    transition: all 600ms ease-in-out;
+}
+.toolbar {
+    height: 20px;
+    font-size: 18px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    -ms-border-radius: 20px;
+    -o-border-radius: 20px;
+    border-style: solid;
+    display: inline-block;
+     margin-top: 15px;
+    width: 504px;
+    margin-left: calc(50% - (504px/2));
+    position: relative;
+    border-radius: 20px 20px 0px 0px;
+    border-width: 1px;
+    margin-bottom: -4px;
+     border-color: lightgray;
+    padding: 0px 0px 10px 0px;
+}
+
+.toolboxButton {
+    padding: 7px;
+    border-right: 1px solid darkgray;
+}
+
+.toolboxButton:hover{
+    background-color: lightgray;
+}
+ .fontsmall:hover{
+      background-color: lightgray; 
+        font-size: 12pt;     
+ }
+
+.firstToolbox {
+    border-radius: 20px 0px 0px 0px;
+    padding-left: 10px;
+}
+
+.fontsmall {
+    padding: 7px;
+    padding-right 0px;
+    font-size: 9pt !important;
+}
+
+.leftLeft {
+    padding-left: 0px !important;
+}
+
+.soundButton {
+    border: 1px solid #434343;
+    font-size: 30px;
+    font-family: Lato, sans-serif;
+    font-weight: 300;
+    border-radius: 50%;
+    color: #434343;
+    text-decoration: none;
+    -webkit-transition: all 400ms ease-in-out;
+    -moz-transition: all 400ms ease-in-out;
+    transition: all 400ms ease-in-out;
+    padding: 10px 15px 11px 15px;
+    margin: 10px 0px 0px 10px;
+    position: absolute;
+    right: 80px;
+}
+.soundButton:hover {
+    background-color: #434343;
+    color: #f5f5f5!important;
+}
+
+.soundButtonOff {
+    border: 1px solid #434343;
+    font-size: 30px;
+    font-family: Lato, sans-serif;
+    font-weight: 300;
+    border-radius: 50%;
+    color: #434343;
+    text-decoration: none;
+    -webkit-transition: all 400ms ease-in-out;
+    -moz-transition: all 400ms ease-in-out;
+    transition: all 400ms ease-in-out;
+    padding: 10px 29px 11px 15px;
+    margin: 10px 0px 0px 10px;
+    position: absolute;
+    right: 80px;
+}
+.soundButtonOff:hover {
+    background-color: #434343;
+    color: #f5f5f5!important;
+}
